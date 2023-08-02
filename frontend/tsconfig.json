@@ -1,0 +1,60 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "ESNext",
+    "target": "ESNext",
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
+    "strict": false,
+    "strictNullChecks": false,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": true,
+    "types": [
+      "vitest",
+      "vitest/importMeta",
+      "vite/client",
+      "vue/ref-macros",
+      "vite-plugin-pages/client",
+      "vite-plugin-vue-component-preview/client",
+      "vite-plugin-vue-layouts/client",
+      "vite-plugin-pwa/client",
+      "unplugin-vue-macros/macros-global"
+    ],
+    "paths": {
+      "@wails/*": [
+        "wailsjs/*"
+      ],
+      "@types": [
+        "types"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "~/*": [
+        "src/*"
+      ],
+      "@@/*": [
+        "."
+      ]
+    }
+  },
+  "vueCompilerOptions": {
+    "plugins": [
+      "@vue-macros/volar/define-models",
+      "@vue-macros/volar/define-slots",
+      "@volar/vue-language-plugin-pug",
+      "@vue/language-plugin-pug"
+    ]
+  },
+  "exclude": [
+    "dist",
+    "node_modules",
+    "cypress/e2e",
+    "cypress/fixtures",
+    "cypress/tsconfig.json"
+  ]
+}

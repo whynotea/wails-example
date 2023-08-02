@@ -1,0 +1,132 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+builds:
+  - main: ./cmd/wails-example
+    id: "wails-example"
+    binary: "wails-example"
+    goos:
+      - linux
+      - windows
+    env:
+      - CGO_ENABLED=0
+    # ensures mod timestamp to be the commit timestamp
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    flags:
+      # important for reproducible builds so full build paths and module paths
+      # are not embedded.
+      - -trimpath
+    ldflags:
+      # disable symbol table (-s) and DWARF generation (-w)
+      - -s -w -X main.Version={{.Version}} -X main.useWails=true
+    tags:
+      - desktop
+      - production
+    overrides:
+      - goos: windows
+        ldflags:
+          - -w -h -H windowsgui -X main.Version={{.Version}} -X main.useWails=true
+        tags:
+          - remote
+          - exclude_graphdriver_btrfs
+          - btrfs_noversion
+          - exclude_graphdriver_devicemapper
+          - containers_image_openpgp
+
+archives:
+  - format: tar.gz
+    # this template makes the OS and Arch compatible with the results of uname.
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    # use zip for windows archives
+    format_overrides:
+    - goos: windows
+      format: zip
+
+# config the checksum filename
+# https://goreleaser.com/customization/checksum
+checksum:
+  name_template: 'checksums.txt'
+
+# create a source tarball
+# https://goreleaser.com/customization/source/
+source:
+  enabled: true
+
+# creates SBOMs of all archives and the source tarball using syft
+# https://goreleaser.com/customization/sbom
+sboms:
+  - artifacts: archive
+  - id: source # Two different sbom configurations need two different IDs
+    artifacts: source
+
+# signs the checksum file
+# all files (including the sboms) are included in the checksum, so we don't
+# need to sign each one if we don't want to
+# https://goreleaser.com/customization/sign
+signs:
+- cmd: cosign
+  env:
+  - COSIGN_EXPERIMENTAL=1
+  certificate: '${artifact}.pem'
+  args:
+    - sign-blob
+    - '--output-certificate=${certificate}'
+    - '--output-signature=${signature}'
+    - '${artifact}'
+    - "--yes" # needed on cosign 2.0.0+
+  artifacts: checksum
+  output: true
+
+# create a docker image
+# https://goreleaser.com/customization/docker
+dockers:
+- image_templates:
+  - 'ghcr.io/whynotea/go-examples:{{ .Tag }}'
+  dockerfile: Containerfile
+  build_flag_templates:
+  - "--pull"
+  - "--label=org.opencontainers.image.created={{.Date}}"
+  - "--label=org.opencontainers.image.name={{.ProjectName}}"
+  - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+  - "--label=org.opencontainers.image.version={{.Version}}"
+  - "--label=org.opencontainers.image.source={{.GitURL}}"
+
+# signs our docker image
+# https://goreleaser.com/customization/docker_sign
+docker_signs:
+  - cmd: cosign
+    artifacts: images
+    output: true
+    args:
+    - 'sign'
+    - '${artifact}@${digest}'
+    - "--yes"
+
+# Configure generation of a development full build snapshot
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+
+# The lines beneath this are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj

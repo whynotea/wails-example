@@ -1,0 +1,16 @@
+build/bin
+node_modules
+bindings.exe
+.DS_Store
+.vite-ssg-dist
+.vite-ssg-temp
+*.local
+dist
+dist-ssr
+node_modules
+.idea/
+*.log
+cypress/downloads
+public/shiki
+.vite-inspect
+server

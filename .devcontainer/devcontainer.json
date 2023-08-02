@@ -1,0 +1,24 @@
+{
+    "image": "localhost/whynotea/devcontainer-wails:latest",
+    "features": {
+    },
+    "runArgs": [
+    "--security-opt",
+    "label=disable",
+    "--device",
+    "/dev/fuse",
+    "--userns=keep-id"
+    ],
+    "customizations": {
+      "vscode": {
+        "settings": {
+
+        },
+        "extensions": [
+
+        ]
+      }
+    },
+    "remoteUser": "code"
+}
+
