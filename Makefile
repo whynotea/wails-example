@@ -9,7 +9,8 @@ build-%:
 	goreleaser build --single-target --snapshot --clean --id $*
 
 release:
-	goreleaser release --snapshot --clean --skip-sbom --skip-sign
+	goreleaser --verbose release --snapshot --clean --skip-sbom --skip-sign --skip-publish --skip-validate
+	find ./cmd -name '*.syso' | xargs -I file rm file
 
 .PHONY: run-%
 run-%:

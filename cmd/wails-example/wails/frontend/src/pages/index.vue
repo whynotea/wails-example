@@ -8,11 +8,12 @@ definePage({
 </script>
 
 <template lang="pug">
-.y-wails-example-home
+.wails-example-home
+  |Test
 </template>
 
 <style lang="scss">
-.y-wails-example-home {
+.wails-example-home {
   width: 100%;
   height: 100%;
   overflow: auto;

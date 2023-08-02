@@ -28,6 +28,7 @@ func Execute() {
 }
 
 func init() {
+	cobra.MousetrapHelpText = ""
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
@@ -35,7 +36,7 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "",
-		"config file (default is $HOME/.whynotea-go-examples-basic-cli.yaml)")
+		"config file (default is $HOME/.whynotea-wails-example.yaml)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -49,10 +50,10 @@ func initConfig() {
 		cobra.CheckErr(err)
 
 		// Search config in home directory with name
-		// ".whynotea-go-examples-basic-cli" (without extension).
+		// ".whynotea-wails-example" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".whynotea-go-examples-basic-cli")
+		viper.SetConfigName(".whynotea-wails-example")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

@@ -6,15 +6,19 @@ before:
     - go mod tidy
     # you may remove this if you don't need go generate
     - go generate ./...
+    # Build the .syso files for windows builds
+    - bash -c "cd ./cmd/{{ .ProjectName }} && go-winres make"
 builds:
-  - main: ./cmd/wails-example
-    id: "wails-example"
-    binary: "wails-example"
+  - main: ./cmd/{{ .ProjectName }}
+    id: "{{ .ProjectName }}"
+    binary: "{{ .ProjectName }}"
     goos:
       - linux
       - windows
+    goarch:
+      - amd64
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
     # ensures mod timestamp to be the commit timestamp
     mod_timestamp: '{{ .CommitTimestamp }}'
     flags:
@@ -29,14 +33,21 @@ builds:
       - production
     overrides:
       - goos: windows
+        goarch: amd64
+        goamd64: v1
         ldflags:
-          - -w -h -H windowsgui -X main.Version={{.Version}} -X main.useWails=true
+          - -w
+          - -s
+          - -h
+          - -H windowsgui
+          - -X main.Version={{.Version}}
+          - -X main.useWails=true
         tags:
-          - remote
-          - exclude_graphdriver_btrfs
-          - btrfs_noversion
-          - exclude_graphdriver_devicemapper
-          - containers_image_openpgp
+          - desktop
+          - production
+    # hooks:
+    #   pre:
+    #     - bash -c "cd ./cmd/{{ .ProjectName }}/wails/frontend && npm install && npm run build"
 
 archives:
   - format: tar.gz

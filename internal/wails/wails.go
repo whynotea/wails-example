@@ -8,7 +8,6 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/logger"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
-	"github.com/wailsapp/wails/v2/pkg/options/linux"
 
 	"github.com/whynotea/wails-example/internal/wails/app"
 )
@@ -19,18 +18,15 @@ func Init(frontend embed.FS) {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:            "Mind Palace",
+		Title:            "Wails Example",
 		Width:            1024,
 		Height:           768,
-		WindowStartState: options.Fullscreen,
-		Frameless:        true,
+		WindowStartState: options.Maximised,
+		Frameless:        false,
 		AssetServer: &assetserver.Options{
 			Assets: frontend,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 128},
-		Linux: &linux.Options{
-			WindowIsTranslucent: true,
-		},
 		OnStartup: func(ctx context.Context) {
 			app.OnStartup(ctx)
 		},

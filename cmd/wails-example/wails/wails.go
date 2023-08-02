@@ -8,17 +8,14 @@ import (
 	"github.com/whynotea/wails-example/internal/wails"
 )
 
-var (
-	frontend embed.FS
+//go:embed all:frontend/dist
+var frontend embed.FS
 
+var (
 	loglevel             string
 	frontenddevserverurl string
 	devServer            string
 )
-
-func SetWailsAssets(frontendAssets embed.FS) {
-	frontend = frontendAssets
-}
 
 // wailsCmd represents the wails command
 var WailsCmd = &cobra.Command{
