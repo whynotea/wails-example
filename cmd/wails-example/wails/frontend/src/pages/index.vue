@@ -9,7 +9,7 @@ definePage({
 
 <template lang="pug">
 .wails-example-home
-  |Test
+  |Testing
 </template>
 
 <style lang="scss">

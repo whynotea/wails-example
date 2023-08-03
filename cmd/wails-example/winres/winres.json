@@ -2,9 +2,23 @@
   "RT_GROUP_ICON": {
     "APP": {
       "0000": [
-        "icon.png",
-        "icon16.png"
+        "icon.16x16.png",
+        "icon.24x24.png",
+        "icon.32x32.png",
+        "icon.48x48.png",
+        "icon.64x64.png",
+        "icon.72x72.png",
+        "icon.96x96.png",
+        "icon.128x128.png",
+        "icon.256x256.png"
       ]
+    },
+    "OTHER": {
+      "0000": "icon.256x256.png"
+    },
+    "#42": {
+      "0409": "icon.ico",
+      "0809": "icon.ico"
     }
   },
   "RT_MANIFEST": {

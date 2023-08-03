@@ -6,11 +6,15 @@ before:
     - go mod tidy
     # you may remove this if you don't need go generate
     - go generate ./...
+    # Generate bindings
+    - bash -c 'cd ./cmd/{{ .ProjectName }} && go build -ldflags "-s -w -X main.useWails=true" -tags "bindings" -o bindings && ./bindings && rm -f ./bindings'
+    # Build frontend
+    - bash -c "cd ./cmd/{{ .ProjectName }}/wails/frontend && npm install && npm run build"
     # Build the .syso files for windows builds
     - bash -c "cd ./cmd/{{ .ProjectName }} && go-winres make"
 builds:
   - main: ./cmd/{{ .ProjectName }}
-    id: "{{ .ProjectName }}"
+    id: "wails-example"
     binary: "{{ .ProjectName }}"
     goos:
       - linux
@@ -45,9 +49,6 @@ builds:
         tags:
           - desktop
           - production
-    # hooks:
-    #   pre:
-    #     - bash -c "cd ./cmd/{{ .ProjectName }}/wails/frontend && npm install && npm run build"
 
 archives:
   - format: tar.gz
@@ -72,7 +73,7 @@ checksum:
 # create a source tarball
 # https://goreleaser.com/customization/source/
 source:
-  enabled: true
+  enabled: false
 
 # creates SBOMs of all archives and the source tarball using syft
 # https://goreleaser.com/customization/sbom
@@ -98,31 +99,6 @@ signs:
     - "--yes" # needed on cosign 2.0.0+
   artifacts: checksum
   output: true
-
-# create a docker image
-# https://goreleaser.com/customization/docker
-dockers:
-- image_templates:
-  - 'ghcr.io/whynotea/go-examples:{{ .Tag }}'
-  dockerfile: Containerfile
-  build_flag_templates:
-  - "--pull"
-  - "--label=org.opencontainers.image.created={{.Date}}"
-  - "--label=org.opencontainers.image.name={{.ProjectName}}"
-  - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-  - "--label=org.opencontainers.image.version={{.Version}}"
-  - "--label=org.opencontainers.image.source={{.GitURL}}"
-
-# signs our docker image
-# https://goreleaser.com/customization/docker_sign
-docker_signs:
-  - cmd: cosign
-    artifacts: images
-    output: true
-    args:
-    - 'sign'
-    - '${artifact}@${digest}'
-    - "--yes"
 
 # Configure generation of a development full build snapshot
 snapshot:

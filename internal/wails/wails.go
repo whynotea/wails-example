@@ -8,6 +8,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/logger"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+	"github.com/wailsapp/wails/v2/pkg/options/windows"
 
 	"github.com/whynotea/wails-example/internal/wails/app"
 )
@@ -25,6 +26,9 @@ func Init(frontend embed.FS) {
 		Frameless:        false,
 		AssetServer: &assetserver.Options{
 			Assets: frontend,
+		},
+		Windows: &windows.Options{
+			DisableWindowIcon: true,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 128},
 		OnStartup: func(ctx context.Context) {

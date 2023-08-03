@@ -14,7 +14,7 @@ var frontend embed.FS
 var (
 	loglevel             string
 	frontenddevserverurl string
-	devServer            string
+	devserver            string
 )
 
 // wailsCmd represents the wails command
@@ -29,8 +29,8 @@ var WailsCmd = &cobra.Command{
 		if frontenddevserverurl != "" {
 			os.Setenv("frontenddevserverurl", frontenddevserverurl)
 		}
-		if devServer != "" {
-			os.Setenv("devServer", devServer)
+		if devserver != "" {
+			os.Setenv("devserver", devserver)
 		}
 		wails.Init(frontend)
 	},
@@ -39,5 +39,5 @@ var WailsCmd = &cobra.Command{
 func init() {
 	WailsCmd.Flags().StringVarP(&loglevel, "loglevel", "l", "", "loglevel of the wails library in development mode")
 	WailsCmd.Flags().StringVarP(&frontenddevserverurl, "frontenddevserverurl", "f", "", "url for the server providing frontend resources for the wails application whilst in development mode")
-	WailsCmd.Flags().StringVarP(&devServer, "devServer", "b", "", "host:port for the server providing the wailsjs bindings for the wails application whilst in development mode")
+	WailsCmd.Flags().StringVarP(&devserver, "devserver", "b", "", "host:port for the server providing the wailsjs bindings for the wails application whilst in development mode")
 }
