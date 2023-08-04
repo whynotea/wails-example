@@ -1,5 +1,5 @@
 {
-    "image": "localhost/whynotea/devcontainer-wails:latest",
+    "image": "ghcr/whynotea/devcontainer-wails:v1.0.0",
     "features": {
     },
     "runArgs": [
